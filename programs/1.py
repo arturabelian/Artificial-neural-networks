@@ -11,10 +11,11 @@ training_inputs = np.array([[0, 0, 1],
                             [1, 1, 1],
                             [1, 0, 1],
                             [0, 1, 1]])
-
+# Правильный результат тренировочных данных.
 training_outputs = np.array([[0, 1, 1, 0]]).T
 
-np.random.seed(1) # Сид генератора.
+# Сид генератора.
+np.random.seed(1) 
 
 synaptic_weights = 2 * np.random.random((3, 1)) -1 # Массив 3 на 1.
 
@@ -24,11 +25,17 @@ print(synaptic_weights)
 # Обрастное распространение ошибки.
 
 for i in range(20000):
-    input_layer = training_inputs # Входной слой принимает на вход тренировочные данные.
-    outputs = sigmoid(np.dot(input_layer, synaptic_weights)) # Выход определяется исходя из произведения входного слоя на слой весов, затем результат передается в функцию активации.
-    err = training_outputs - outputs # Ошибка рассогласования между идеальным значением и реальным(получившимся при работе нейросети)
-    adj = np.dot(input_layer.T, err * (outputs * (1 - outputs))) # Вычисление корректировки с учетом ошибки.
-    synaptic_weights += adj # Корректировка слоя весов.
+# Входной слой принимает на вход тренировочные данные.
+    input_layer = training_inputs
+# Выход определяется исходя из произведения входного слоя на слой весов,
+# затем результат передается в функцию активации.
+    outputs = sigmoid(np.dot(input_layer, synaptic_weights))
+# Ошибка рассогласования между идеальным значением и реальным(получившимся при работе нейросети).
+    err = training_outputs - outputs
+# Вычисление корректировки с учетом ошибки.
+    adj = np.dot(input_layer.T, err * (outputs * (1 - outputs)))
+# Корректировка слоя весов.
+    synaptic_weights += adj
 
 print("Вес после обучения: ")
 print(synaptic_weights)
@@ -37,7 +44,7 @@ print("Результат после обучения: ")
 print(outputs)
 
 # Тест
-
+# Подача новых данных на вход.
 new_inputs = np.array([1, 1, 0])
 
 outputs = sigmoid(np.dot(new_inputs, synaptic_weights))
@@ -68,4 +75,3 @@ print(outputs)
 # [ 0.99996185]
 # 
 # 
-
