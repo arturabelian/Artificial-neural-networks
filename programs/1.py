@@ -1,4 +1,4 @@
-# Простейший перцептрон с сигмоидальной функцией активации.
+# Простейший перцептрон с сигмоидной функцией активации.
 
 import numpy as np
 
@@ -11,6 +11,7 @@ training_inputs = np.array([[0, 0, 1],
                             [1, 1, 1],
                             [1, 0, 1],
                             [0, 1, 1]])
+
 # Правильный результат тренировочных данных.
 training_outputs = np.array([[0, 1, 1, 0]]).T
 
@@ -22,20 +23,20 @@ synaptic_weights = 2 * np.random.random((3, 1)) -1 # Массив 3 на 1.
 print("Случайная инициализация весов: ")
 print(synaptic_weights)
 
-# Обратное распространение ошибки.
+# Обрастное распространение ошибки.
 
-for i in range(20000):
+for item in range(20000):
 # Входной слой принимает на вход тренировочные данные.
     input_layer = training_inputs
 # Выход определяется исходя из произведения входного слоя на слой весов,
 # затем результат передается в функцию активации.
     outputs = sigmoid(np.dot(input_layer, synaptic_weights))
 # Ошибка рассогласования между идеальным значением и реальным(получившимся при работе нейросети).
-    err = training_outputs - outputs
+    error = training_outputs - outputs
 # Вычисление корректировки с учетом ошибки.
-    adj = np.dot(input_layer.T, err * (outputs * (1 - outputs)))
+    adjustment = np.dot(input_layer.T, error * (outputs * (1 - outputs)))
 # Корректировка слоя весов.
-    synaptic_weights += adj
+    synaptic_weights += adjustment
 
 print("Вес после обучения: ")
 print(synaptic_weights)
@@ -75,4 +76,3 @@ print(outputs)
 # [ 0.99996185]
 # 
 # 
-
