@@ -139,14 +139,14 @@ class Neuralnetwork:
 # лишь задания желаемых размеров сети в качестве параметров.
 
 # Число входных, скрытых и выходных узлов.
-input_nodes = 3
-hidden_nodes = 3
-output_nodes = 3
+input_nodes = 784
+hidden_nodes = 200
+output_nodes = 10
 
 # Кроме того, нам нельзя забывать о рейте обучения.
 
-# Рейт обучения 0.3
-learning_rate = 0.3
+# Рейт обучения 0.1
+learning_rate = 0.1
 
 # Создание экземпляра нейронной сети.
 n = Neuralnetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
