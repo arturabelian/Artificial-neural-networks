@@ -5,8 +5,18 @@
 # Опрос — получение значений сигналов с выходных узлов после предоставления значений входящих сигналов.
 
 import numpy
+
 # scipy.special для функции сигмойды expit()
 import scipy.special
+
+# Библиотека для отрисовки массивов.
+import matplotlib.pyplot
+
+# Для google colab.
+%matplotlib inline
+
+# Для загрузки данных из PNG файлов.
+import imageio
 
 # Определение класса нейросети.
 class Neuralnetwork:
@@ -151,9 +161,70 @@ learning_rate = 0.1
 # Создание экземпляра нейронной сети.
 n = Neuralnetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
-# Тест query (Просто так)
-n.query([1.0, 0.5, -1.5])
+# Загрузка  набора тренировочных данных mnist из CSV файла.
+training_data_file = open("mnist_dataset/mnist_train_100.csv", 'r')
+training_data_list = training_data_file.readlines()
+training_data_file.close()
 
-# array([[ 0.43461026],
-#        [ 0.40331273],
-#        [ 0.56675401]])
+# Трнировка нейросети.
+
+# epochs - это количество тренировок.
+epochs = 10
+
+for e in range(epochs):
+    # Проход через все записи в тренировочном наборе.
+    for record in training_data_list:
+        # Разделение записей ','.
+        all_values = record.split(',')
+        # Масштабирование и сдвиг входов.
+        inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+        # Создание нужного выходного значения (все 0.01, кроме желаемой метки 0.99)
+        targets = numpy.zeros(output_nodes) + 0.01
+        # all_values[0] нужная метка для этой записи.
+        targets[int(all_values[0])] = 0.99
+        n.train(inputs, targets)
+        pass
+    pass
+
+# Тестирование нейросети с нашим изображением.
+
+# Загрузка данных изображения из png файла в массив.
+print ("loading ... my_image/my_image.png")
+img_array = imageio.imread('my_image/my_image.png', as_gray=True)
+    
+# Изменение формы из 28x28 в список с 784 значениями.
+img_data  = 255.0 - img_array.reshape(784)
+    
+# Масштабирование данных в диапазоне от 0.01 до 1.0
+img_data = (img_data / 255.0 * 0.99) + 0.01
+print("min = ", numpy.min(img_data))
+print("max = ", numpy.max(img_data))
+
+# Рисуем изображение.
+matplotlib.pyplot.imshow(img_data.reshape(28,28), cmap='Greys', interpolation='None')
+
+# Опрашиваем сеть.
+outputs = n.query(img_data)
+print (outputs)
+
+# Индекс наивысшего значения передается метке.
+label = numpy.argmax(outputs)
+print("Network says ", label)
+
+# loading ... my_image/my_image.png
+# min =  0.01
+# max =  1.0
+# [[0.01619033]
+#  [0.00805726]
+#  [0.03006624]
+#  [0.51209626]
+#  [0.27860867]
+#  [0.0466062 ]
+#  [0.05860121]
+#  [0.02263441]
+#  [0.15948854]
+#  [0.05217102]]
+# Network says  3
+
+# 51%
+# На более сложном датасете показатель был равен 96%.
